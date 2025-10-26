@@ -16,7 +16,11 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton(TimeProvider.System);
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    }); 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -55,13 +59,23 @@ builder.Services.AddScoped<IQueryHandler<GetLowStockProductsQuery, GetLowStockPr
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
     {
-        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
-
+});
 var app = builder.Build();
+app.UseCors("AllowAll");
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Order Management API V1");
+    c.RoutePrefix = string.Empty;
+});
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 // Initial data
 using (var scope = app.Services.CreateScope())
@@ -70,15 +84,6 @@ using (var scope = app.Services.CreateScope())
     DataSeeder.SeedData(context);
 }
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Order Management API V1");
-        c.RoutePrefix = string.Empty;
-    });
-}
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
