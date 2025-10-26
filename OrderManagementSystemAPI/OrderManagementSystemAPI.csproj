@@ -13,9 +13,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.10" />
 	<PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
   </ItemGroup>
-
-  <ItemGroup>
-	<InternalsVisibleTo Include="OrderManagementSystemAPI.Test" />
-  </ItemGroup>
-
 </Project>
