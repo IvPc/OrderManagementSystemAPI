@@ -1,0 +1,14 @@
+Output
+.vs
+*/bin
+*/obj
+*.Test/resources
+TestResults/*
+packages
+*.ncrunchproject
+/*.user
+/*.suo
+node_modules
+target
+*.gitattributes
+*/publish

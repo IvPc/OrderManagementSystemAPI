@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="OrderManagementSystemAPI.Test/OrderManagementSystemAPI.Test.csproj" />
+  <Project Path="OrderManagementSystemAPI/OrderManagementSystemAPI.csproj" />
+</Solution>
